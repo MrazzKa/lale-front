@@ -52,15 +52,15 @@ export class AuthService {
   }
 
   async login(data: LoginDto) {
-    const user = await this.usersService.findByEmail(data.email);
+    const user = await this.usersService.findByLogin(data.login);
 
     if (!user) {
-      throw new UnauthorizedException("Invalid email or password");
+      throw new UnauthorizedException("Invalid login or password");
     }
 
     const isPasswordValid = await bcrypt.compare(data.password, user.password);
     if (!isPasswordValid) {
-      throw new UnauthorizedException("Invalid email or password");
+      throw new UnauthorizedException("Invalid login or password");
     }
 
     const { password, ...userWithoutPassword } = user;

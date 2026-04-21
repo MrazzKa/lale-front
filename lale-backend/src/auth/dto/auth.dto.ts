@@ -22,14 +22,16 @@ export class RegisterDto {
   @IsString()
   avatarUrl?: string;
 
+  // We keep role as an option for internal use/scripts, 
+  // but frontend will stop sending it during registration.
   @IsOptional()
   @IsIn(["ADMIN", "CLIENT"])
   role?: "ADMIN" | "CLIENT";
 }
 
 export class LoginDto {
-  @IsEmail()
-  email: string;
+  @IsString()
+  login: string;
 
   @IsString()
   password: string;
