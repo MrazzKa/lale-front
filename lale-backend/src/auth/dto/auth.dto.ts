@@ -30,8 +30,13 @@ export class RegisterDto {
 }
 
 export class LoginDto {
+  @IsOptional()
   @IsString()
-  login: string;
+  login?: string;
+
+  @IsOptional()
+  @IsString()
+  email?: string;
 
   @IsString()
   password: string;

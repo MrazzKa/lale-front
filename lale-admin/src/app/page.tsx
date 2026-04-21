@@ -1,12 +1,10 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { useRouter } from 'next/navigation';
 
 import { api } from '@/lib/api';
-import { authStorage } from '@/lib/auth';
 
-import { Sidebar } from '@/components/Sidebar';
+import { ProtectedShell } from '@/components/ProtectedShell';
 import { PageHeader } from '@/components/PageHeader';
 import { KpiCard } from '@/components/KpiCard';
 import { UserManager } from '@/components/UserManager';
@@ -20,36 +18,31 @@ type User = {
 };
 
 export default function DashboardPage() {
-  const router = useRouter();
-
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  async function loadUsers() {
-    try {
-      setError('');
-      const data = await api.getUsers();
-      setUsers(Array.isArray(data) ? data : []);
-    } catch (err: unknown) {
-      const message =
-        err instanceof Error ? err.message : 'Ошибка загрузки пользователей';
-      setError(message);
-    } finally {
-      setLoading(false);
-    }
-  }
-
   useEffect(() => {
-    const token = authStorage.getAccessToken();
+    let cancelled = false;
 
-    if (!token) {
-      router.push('/login');
-      return;
-    }
+    api
+      .getUsers()
+      .then((data) => {
+        if (cancelled) return;
+        setUsers(Array.isArray(data) ? data : []);
+      })
+      .catch((err: unknown) => {
+        if (cancelled) return;
+        setError(err instanceof Error ? err.message : 'Ошибка загрузки пользователей');
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
 
-    loadUsers();
-  }, [router]);
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const adminCount = useMemo(
     () => users.filter((u) => u.role === 'ADMIN').length,
@@ -62,38 +55,23 @@ export default function DashboardPage() {
   );
 
   return (
-    <div className="app-shell">
-      <Sidebar />
+    <ProtectedShell>
+      <PageHeader
+        title="Dashboard"
+        description="Обзор пользователей и основных сущностей системы мониторинга озёр."
+      />
 
-      <main className="content">
-        <PageHeader
-          title="Dashboard"
-          description="Обзор пользователей и основных сущностей системы lakes-backend"
-        />
+      {error && <div className="error-message" style={{ marginBottom: 16 }}>{error}</div>}
 
-        {error && (
-          <div style={{ color: 'red', marginBottom: 16 }}>
-            {error}
-          </div>
-        )}
+      <section className="grid cards-3" style={{ marginBottom: 24 }}>
+        <KpiCard title="Всего пользователей" value={loading ? '—' : users.length} />
+        <KpiCard title="Администраторы" value={loading ? '—' : adminCount} />
+        <KpiCard title="Клиенты" value={loading ? '—' : clientCount} />
+      </section>
 
-        <section
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(3, minmax(220px, 1fr))',
-            gap: 16,
-            marginBottom: 24,
-          }}
-        >
-          <KpiCard title="Всего пользователей" value={users.length} />
-          <KpiCard title="Администраторы" value={adminCount} />
-          <KpiCard title="Клиенты" value={clientCount} />
-        </section>
-
-        <section>
-          <UserManager/>
-        </section>
-      </main>
-    </div>
+      <section>
+        <UserManager />
+      </section>
+    </ProtectedShell>
   );
 }

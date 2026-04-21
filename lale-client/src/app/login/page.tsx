@@ -8,7 +8,7 @@ import { authStorage } from '@/lib/auth';
 
 export default function LoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState('');
+  const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -19,7 +19,7 @@ export default function LoginPage() {
     setError('');
 
     try {
-      const result = await api.login(email, password);
+      const result = await api.login(identifier, password);
       authStorage.setAccessToken(result.tokens.accessToken);
       authStorage.setRefreshToken(result.tokens.refreshToken);
       authStorage.setUser(result.user);
@@ -42,13 +42,13 @@ export default function LoginPage() {
 
         <form className="stack" onSubmit={handleSubmit}>
           <label className="field">
-            <span>Email</span>
+            <span>Логин или Email</span>
             <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Введите email"
-              autoComplete="email"
+              type="text"
+              value={identifier}
+              onChange={(e) => setIdentifier(e.target.value)}
+              placeholder="Логин или email"
+              autoComplete="username"
               required
             />
           </label>

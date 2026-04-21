@@ -10,16 +10,27 @@ const links = [
   { href: '/water-bodies', label: 'Water bodies' },
 ];
 
-export function Sidebar() {
+export function Sidebar({
+  isOpen = false,
+  onClose,
+}: {
+  isOpen?: boolean;
+  onClose?: () => void;
+}) {
   const pathname = usePathname();
   const router = useRouter();
 
+  function isActive(href: string) {
+    if (href === '/') return pathname === '/';
+    return pathname === href || pathname.startsWith(`${href}/`);
+  }
+
   return (
-    <aside className="sidebar">
+    <aside className={`sidebar${isOpen ? ' is-open' : ''}`}>
       <div className="sidebar-header">
-        <div className="eyebrow">Control Panel</div>
+        <div className="eyebrow">Control panel</div>
         <h2>Lakes Admin</h2>
-        <p>Система мониторинга водоемов</p>
+        <p>Управление озёрами, пользователями и замерами</p>
       </div>
 
       <nav className="nav">
@@ -27,17 +38,18 @@ export function Sidebar() {
           <Link
             key={link.href}
             href={link.href}
-            className={pathname === link.href ? 'active' : ''}
+            className={isActive(link.href) ? 'active' : ''}
+            onClick={onClose}
           >
             {link.label}
           </Link>
         ))}
       </nav>
 
-      <div style={{ marginTop: 'auto', paddingTop: 24 }}>
+      <div className="sidebar-footer">
         <button
           className="btn secondary"
-          style={{ width: '100%', opacity: 0.8 }}
+          style={{ width: '100%' }}
           onClick={() => {
             authStorage.clear();
             router.push('/login');

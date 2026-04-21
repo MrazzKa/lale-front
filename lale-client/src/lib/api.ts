@@ -109,12 +109,17 @@ async function tryRequest<T>(path: string): Promise<T | null> {
 }
 
 export const api = {
-  login(email: string, password: string): Promise<LoginResponse> {
+  login(identifier: string, password: string): Promise<LoginResponse> {
+    const trimmed = identifier.trim();
+    const payload = trimmed.includes('@')
+      ? { email: trimmed, password }
+      : { login: trimmed, password };
+
     return request<LoginResponse>('/auth/login', {
       method: 'POST',
       skipAuth: true,
       retryOnUnauthorized: false,
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify(payload),
     });
   },
 

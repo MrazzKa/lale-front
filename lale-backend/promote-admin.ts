@@ -1,36 +1,38 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from './src/generated/prisma';
 
 const prisma = new PrismaClient();
 
-async function promote(login: string) {
+async function promote(identifier: string) {
   try {
-    const user = await prisma.user.findUnique({
-      where: { login },
-    });
+    const user = identifier.includes('@')
+      ? await prisma.user.findUnique({ where: { email: identifier } })
+      : await prisma.user.findUnique({ where: { login: identifier } });
 
     if (!user) {
-      console.error(`User with login "${login}" not found.`);
+      console.error(`User "${identifier}" not found.`);
+      process.exitCode = 1;
       return;
     }
 
     await prisma.user.update({
-      where: { login },
+      where: { id: user.id },
       data: { role: 'ADMIN' },
     });
 
-    console.log(`Successfully promoted user "${login}" to ADMIN!`);
+    console.log(`Successfully promoted "${identifier}" to ADMIN.`);
   } catch (error) {
     console.error('Error promoting user:', error);
+    process.exitCode = 1;
   } finally {
     await prisma.$disconnect();
   }
 }
 
-const loginToPromote = process.argv[2];
+const identifier = process.argv[2];
 
-if (!loginToPromote) {
-  console.log('Usage: npx ts-node promote-admin.ts <login>');
+if (!identifier) {
+  console.log('Usage: npx ts-node promote-admin.ts <login-or-email>');
   process.exit(1);
 }
 
-promote(loginToPromote);
+promote(identifier);

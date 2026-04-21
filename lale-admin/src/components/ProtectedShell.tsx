@@ -8,6 +8,7 @@ import { Sidebar } from './Sidebar';
 export function ProtectedShell({ children }: { children: ReactNode }) {
   const router = useRouter();
   const [ready, setReady] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const token = authStorage.getAccessToken();
@@ -24,7 +25,22 @@ export function ProtectedShell({ children }: { children: ReactNode }) {
 
   return (
     <div className="layout">
-      <Sidebar />
+      <button
+        type="button"
+        className="sidebar-toggle"
+        aria-label="Открыть меню"
+        onClick={() => setMenuOpen(true)}
+      >
+        <span />
+      </button>
+
+      <Sidebar isOpen={menuOpen} onClose={() => setMenuOpen(false)} />
+
+      <div
+        className={`sidebar-backdrop${menuOpen ? ' is-open' : ''}`}
+        onClick={() => setMenuOpen(false)}
+      />
+
       <main className="content">{children}</main>
     </div>
   );

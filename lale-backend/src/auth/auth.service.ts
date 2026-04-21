@@ -52,7 +52,17 @@ export class AuthService {
   }
 
   async login(data: LoginDto) {
-    const user = await this.usersService.findByLogin(data.login);
+    const identifier = (data.login ?? data.email ?? "").trim();
+
+    if (!identifier) {
+      throw new BadRequestException("Login or email is required");
+    }
+
+    const user = identifier.includes("@")
+      ? (await this.usersService.findByEmail(identifier)) ??
+        (await this.usersService.findByLogin(identifier))
+      : (await this.usersService.findByLogin(identifier)) ??
+        (await this.usersService.findByEmail(identifier));
 
     if (!user) {
       throw new UnauthorizedException("Invalid login or password");
