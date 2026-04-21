@@ -9,7 +9,7 @@ import { Header } from './Header';
 
 export function ProtectedShell({ children }: { children: ReactNode }) {
   const router = useRouter();
-  const [ready, setReady] = useState(false);
+  const [ready, setReady] = useState<boolean>(() => Boolean(authStorage.getAccessToken()));
   const [user, setUser] = useState<User | null>(authStorage.getUser<User>());
 
   useEffect(() => {
@@ -23,6 +23,7 @@ export function ProtectedShell({ children }: { children: ReactNode }) {
       .getProfile()
       .then((profile) => {
         setUser(profile);
+        authStorage.setUser(profile);
         setReady(true);
       })
       .catch(() => {
