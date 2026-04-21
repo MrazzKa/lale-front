@@ -31,6 +31,7 @@ export function Header({ user }: { user: User | null }) {
           </div>
         </Link>
 
+        {/* Desktop Nav */}
         <nav className="header-nav">
           {navLinks.map((link) => (
             <Link

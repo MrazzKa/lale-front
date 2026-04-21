@@ -27,6 +27,7 @@ export default function RegisterPage() {
     setError('');
 
     try {
+      // We no longer send 'role' to avoid security warnings on Render
       const result = await api.register(login, email, password);
       authStorage.setAccessToken(result.tokens.accessToken);
       authStorage.setRefreshToken(result.tokens.refreshToken);
@@ -41,42 +42,44 @@ export default function RegisterPage() {
 
   return (
     <div className="auth-page">
-      <div className="auth-card stack">
-        <div>
+      <div className="auth-card animate-fade">
+        <div className="auth-header">
           <div className="eyebrow">Новый клиент</div>
           <h1 className="auth-title">Регистрация</h1>
-          <p className="muted">Регистрация отправляет роль CLIENT и не содержит административных сценариев.</p>
+          <p className="auth-subtitle">Создайте аккаунт для доступа к мониторингу водоемов</p>
         </div>
 
-        <form className="stack" onSubmit={handleSubmit}>
-          <label className="field">
-            <span>Логин</span>
-            <input value={login} onChange={(e) => setLogin(e.target.value)} placeholder="Введите логин" required />
-          </label>
+        <form className="auth-form" onSubmit={handleSubmit}>
+          <div className="field-group">
+            <label className="field">
+              <span>Логин</span>
+              <input value={login} onChange={(e) => setLogin(e.target.value)} placeholder="Ваш никнейм" required />
+            </label>
 
-          <label className="field">
-            <span>Email</span>
-            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Введите email" required />
-          </label>
+            <label className="field">
+              <span>Email</span>
+              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="email@example.com" required />
+            </label>
 
-          <label className="field">
-            <span>Пароль</span>
-            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Введите пароль" required />
-          </label>
+            <label className="field">
+              <span>Пароль</span>
+              <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" required />
+            </label>
 
-          <label className="field">
-            <span>Повторите пароль</span>
-            <input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="Повторите пароль" required />
-          </label>
+            <label className="field">
+              <span>Повторите пароль</span>
+              <input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="••••••••" required />
+            </label>
+          </div>
 
-          {error ? <div className="error-box">{error}</div> : null}
+          {error ? <div className="error-message">{error}</div> : null}
 
-          <button className="btn" type="submit" disabled={loading}>
+          <button className="btn btn-primary" type="submit" disabled={loading}>
             {loading ? 'Создание...' : 'Создать аккаунт'}
           </button>
         </form>
 
-        <p className="muted small-text">
+        <p className="auth-footer">
           Уже есть аккаунт? <Link href="/login">Войти</Link>
         </p>
       </div>

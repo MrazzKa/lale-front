@@ -8,7 +8,7 @@ import { authStorage } from '@/lib/auth';
 export default function LoginPage() {
   const router = useRouter();
 
-  const [email, setEmail] = useState('');
+  const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -19,7 +19,7 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const result = await api.login(email, password);
+      const result = await api.login(login, password);
 
       authStorage.setAccessToken(result.tokens.accessToken);
       authStorage.setRefreshToken(result.tokens.refreshToken);
@@ -36,41 +36,45 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="centered">
-      <form className="login-box stack" onSubmit={handleSubmit}>
-        <h1>Lakes Admin</h1>
-        <p>Вход администратора для работы с lakes-backend</p>
+    <div className="auth-page">
+      <div className="auth-card animate-fade">
+        <div className="auth-header">
+          <h1 className="auth-title">Lakes Admin</h1>
+          <p className="auth-subtitle">Вход в панель управления системой мониторинга</p>
+        </div>
 
-        <label className="field">
-          <span>Email</span>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Введите email"
-            autoComplete="email"
-            required
-          />
-        </label>
+        <form className="auth-form" onSubmit={handleSubmit}>
+          <div className="field-group">
+            <label className="field">
+              <span>Логин</span>
+              <input
+                type="text"
+                value={login}
+                onChange={(e) => setLogin(e.target.value)}
+                placeholder="Ваш логин"
+                required
+              />
+            </label>
 
-        <label className="field">
-          <span>Password</span>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Введите пароль"
-            autoComplete="current-password"
-            required
-          />
-        </label>
+            <label className="field">
+              <span>Пароль</span>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                required
+              />
+            </label>
+          </div>
 
-        {error && <div style={{ color: 'red' }}>{error}</div>}
+          {error && <div className="error-message">{error}</div>}
 
-        <button className="btn" type="submit" disabled={loading}>
-          {loading ? 'Вход...' : 'Login'}
-        </button>
-      </form>
+          <button className="btn btn-primary" type="submit" disabled={loading}>
+            {loading ? 'Вход в систему...' : 'Войти в панель'}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

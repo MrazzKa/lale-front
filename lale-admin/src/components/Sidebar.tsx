@@ -17,9 +17,11 @@ export function Sidebar() {
   return (
     <aside className="sidebar">
       <div className="sidebar-header">
+        <div className="eyebrow">Control Panel</div>
         <h2>Lakes Admin</h2>
-        <p>Панель управления системой водных ресурсов.</p>
+        <p>Система мониторинга водоемов</p>
       </div>
+
       <nav className="nav">
         {links.map((link) => (
           <Link
@@ -31,16 +33,17 @@ export function Sidebar() {
           </Link>
         ))}
       </nav>
+
       <div style={{ marginTop: 'auto', paddingTop: 24 }}>
         <button
           className="btn secondary"
-          style={{ width: '100%' }}
+          style={{ width: '100%', opacity: 0.8 }}
           onClick={() => {
             authStorage.clear();
             router.push('/login');
           }}
         >
-          Logout
+          Выйти
         </button>
       </div>
     </aside>
