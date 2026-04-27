@@ -6,6 +6,7 @@ import { PrismaModule } from "./prisma/prisma.module";
 import { UsersModule } from "./users/users.module";
 import { AuthModule } from "./auth/auth.module";
 import { WaterBodiesModule } from "./water-bodies/water-bodies.module";
+import { AnalyticsModule } from "./analytics/analytics.module";
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { WaterBodiesModule } from "./water-bodies/water-bodies.module";
     UsersModule,
     AuthModule,
     WaterBodiesModule,
+    AnalyticsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

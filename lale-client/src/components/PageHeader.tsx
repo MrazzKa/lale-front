@@ -10,12 +10,12 @@ export function PageHeader({
   action?: ReactNode;
 }) {
   return (
-    <div className="page-header">
+    <div className="page-header animate-fade-in">
       <div>
         <h1 className="page-title">{title}</h1>
         {description ? <p className="page-description">{description}</p> : null}
       </div>
-      {action ? <div>{action}</div> : null}
+      {action ? <div className="animate-fade-in" style={{ animationDelay: '0.1s' }}>{action}</div> : null}
     </div>
   );
 }

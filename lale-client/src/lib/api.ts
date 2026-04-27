@@ -172,4 +172,8 @@ export const api = {
   getWaterBodyMeasurements(id: string): Promise<Measurement[]> {
     return request<Measurement[]>(`/water-bodies/${id}/measurements`, { method: 'GET' });
   },
+
+  getGlobalStats(): Promise<any> {
+    return request<any>('/analytics/stats', { method: 'GET' });
+  },
 };

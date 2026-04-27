@@ -325,4 +325,10 @@ export const api = {
       },
     );
   },
+  
+  getGlobalStats: async (): Promise<any> => {
+    return request<any>('/analytics/stats', {
+      method: 'GET',
+    });
+  },
 };

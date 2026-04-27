@@ -197,7 +197,13 @@ export function WaterQualityChart({ measurements }: Props) {
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="date" />
                 <YAxis />
-                <Tooltip
+                <Tooltip 
+                  cursor={{ fill: '#f1f5f9' }}
+                  contentStyle={{ 
+                    borderRadius: '12px', 
+                    border: 'none', 
+                    boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)' 
+                  }}
                   formatter={(value: number, _name, props) => {
                     const payload = props?.payload as
                       | { percent?: number }
@@ -209,8 +215,13 @@ export function WaterQualityChart({ measurements }: Props) {
                     ];
                   }}
                 />
-                <Legend />
-                <Bar dataKey="value" name={currentMetric.label}>
+                <Legend iconType="circle" />
+                <Bar 
+                  dataKey="value" 
+                  name={currentMetric.label}
+                  radius={[4, 4, 0, 0]}
+                  barSize={32}
+                >
                   {data.map((entry, index) => (
                     <Cell
                       key={`cell-${index}`}

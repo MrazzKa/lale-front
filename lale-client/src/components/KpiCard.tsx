@@ -8,8 +8,8 @@ export function KpiCard({
   hint?: string;
 }) {
   return (
-    <div className="card kpi-card">
-      <div className="muted">{title}</div>
+    <div className="card kpi-card glass animate-fade-in card-hover">
+      <div className="eyebrow no-margin">{title}</div>
       <div className="kpi">{value}</div>
       {hint ? <div className="muted small-text">{hint}</div> : null}
     </div>

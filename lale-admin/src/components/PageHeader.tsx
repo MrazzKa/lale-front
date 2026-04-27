@@ -10,17 +10,12 @@ export function PageHeader({
   action?: ReactNode; 
 }) {
   return (
-    <div className="topbar">
+    <div className="page-header animate-fade-in">
       <div>
         <h1 className="page-title">{title}</h1>
-        {/* Рендерим description, если он передан */}
-        {description && (
-          <p className="page-description" style={{ color: 'gray', marginTop: '4px' }}>
-            {description}
-          </p>
-        )}
+        {description ? <p className="page-description">{description}</p> : null}
       </div>
-      {action}
+      {action ? <div className="animate-fade-in" style={{ animationDelay: '0.1s' }}>{action}</div> : null}
     </div>
   );
 }

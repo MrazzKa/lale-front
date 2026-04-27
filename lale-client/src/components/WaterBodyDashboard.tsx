@@ -175,17 +175,41 @@ export function WaterBodyDashboard({ id }: { id: string }) {
         </div>
 
         {chartData.length ? (
-          <div className="chart-box">
+          <div className="chart-box animate-fade-in" style={{ animationDelay: '0.2s' }}>
             <ResponsiveContainer>
-              <LineChart data={chartData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="date" minTickGap={24} />
-                <YAxis />
+              <LineChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                <XAxis 
+                  dataKey="date" 
+                  minTickGap={24} 
+                  axisLine={false} 
+                  tickLine={false} 
+                  tick={{ fill: '#64748b', fontSize: 12 }} 
+                />
+                <YAxis 
+                  axisLine={false} 
+                  tickLine={false} 
+                  tick={{ fill: '#64748b', fontSize: 12 }} 
+                />
                 <Tooltip
+                  contentStyle={{ 
+                    borderRadius: '12px', 
+                    border: 'none', 
+                    boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+                    background: 'rgba(255, 255, 255, 0.9)',
+                    backdropFilter: 'blur(4px)'
+                  }}
                   formatter={(value: number) => [`${value}${chartMetric.unit ? ` ${chartMetric.unit}` : ''}`, chartMetric.label]}
                   labelFormatter={(label: string) => `Дата: ${label}`}
                 />
-                <Line type="monotone" dataKey="value" stroke="#1f6feb" strokeWidth={3} dot={{ r: 4 }} activeDot={{ r: 6 }} />
+                <Line 
+                  type="monotone" 
+                  dataKey="value" 
+                  stroke="var(--accent, #3b82f6)" 
+                  strokeWidth={4} 
+                  dot={{ r: 4, fill: '#fff', strokeWidth: 2, stroke: 'var(--accent)' }} 
+                  activeDot={{ r: 6, strokeWidth: 0 }} 
+                />
               </LineChart>
             </ResponsiveContainer>
           </div>
